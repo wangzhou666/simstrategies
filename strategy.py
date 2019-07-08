@@ -3,7 +3,7 @@ class Strategy(object):
     raise NotImplementedError()
 
 
-class ScaledETFStrategy():
+class ScaledETFStrategy(Strategy):
   def __init__(
       self, account, track_symbol, amplifier=1, **kwargs):
     self._acc = account
