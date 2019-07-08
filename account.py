@@ -1,6 +1,33 @@
-from collections import namedtuple
+class VirtualAsset(object):
+  def __init__(self, symbol, position, close):
+    self._symbol = symbol
+    self._position = position
+    self._close = close
 
-Asset = namedtuple('Asset', ['symbol', 'position', 'close'])
+  @property
+  def symbol(self):
+    return self._symbol
+
+  @property
+  def position(self):
+    return self._position
+
+  @property
+  def close(self):
+    return self._close
+
+  @property
+  def mkt_val(self):
+    return self._position * self._close
+
+  @position.setter
+  def position(self, val):
+    self._position = val
+
+  @close.setter
+  def close(self, val):
+    self._close = val
+  
 
 class VirtualAccount(object):
   def __init__(
@@ -18,7 +45,7 @@ class VirtualAccount(object):
 
   def update_asset_quote(self, symbol, quote):
     self._assets.setdefault(
-        symbol, Asset(
+        symbol, VirtualAsset(
             symbol=symbol, position=0, close=quote)).close = quote
 
   def execute_asset(self, symbol, amount, action):
@@ -29,9 +56,8 @@ class VirtualAccount(object):
     self._cash -= self._assets[symbol].close * amount
 
   def get_assets_value(self):
-    assets_mkt_val = sum(
-        asset.position * asset.close for asset in self._assets.values())
-    return asset_mkt_val
+    total_mkt_val = sum(asset.mkt_val for asset in self._assets.values())
+    return total_mkt_val
 
   def get_net_value(self):
     return self._cash + self.get_assets_value()
