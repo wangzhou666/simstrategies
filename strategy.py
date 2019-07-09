@@ -1,17 +1,20 @@
 class Strategy(object):
-  def apply(self):
+  def apply(self, account):
     raise NotImplementedError()
 
 
 class ScaledETFStrategy(Strategy):
   def __init__(
-      self, account, track_symbol, amplifier=1, **kwargs):
-    self._acc = account
+      self, symbol, amplifier=1, **kwargs):
     self._sym = symbol
     self._amp = amplifier
     self._kwargs = kwargs
 
-  def apply(self):
+  @property
+  def symbol(self):
+    return self._sym
+
+  def apply(self, account):
     """ Apply scaled ETF strategy to account.
 
        Adjust the account holdings so that:
@@ -26,15 +29,15 @@ class ScaledETFStrategy(Strategy):
         - amp > 0, it longs
         - amp < 0, it shorts
     """
-    assets = self._acc.list_assets()
+    assets = account.list_assets()
     for ast in assets:
       if ast.symbol == self._sym: continue
-      self._acc.execute_asset(ast.symbol, ast.position, 'SELL')
+      account.execute_asset(ast.symbol, ast.position, 'SELL')
 
-    tgt_cash = (1 - self._amp) * self._acc.get_net_value()
-    spending_cash = self._acc.cash - tgt_cash
-    delta_position = spending_cash / self._acc.get_asset(self._sym).close
+    tgt_cash = (1 - self._amp) * account.get_net_value()
+    spending_cash = account.cash - tgt_cash
+    delta_position = spending_cash / account.get_asset(self._sym).close
     if not self._kwargs.get('allow_float_position'):
       delta_position = int(delta_position)
-    self._acc.execute_asset(self._sym, delta_position, 'BUY')
+    account.execute_asset(self._sym, delta_position, 'BUY')
 
