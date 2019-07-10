@@ -18,7 +18,7 @@ class DailyStrategySimulator(object):
   def account(self):
     return self._acc
 
-  # TODO: deal with situation where multiple assets exist.
+  #TODO: deal with situation where multiple assets exist.
   def simulate(self):
     daily_adj_hst = self._hst['daily_adjusted']
     start, end = self._date_range
