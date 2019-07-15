@@ -4,6 +4,11 @@ class VirtualAsset(object):
     self._position = position
     self._close = close
 
+  def __str__(self):
+    tmpl = '   sym: %s pos: %s price: %s.'
+    return tmpl % (
+        self._symbol, self._position, self._close)
+
   @property
   def symbol(self):
     return self._symbol
@@ -31,10 +36,23 @@ class VirtualAsset(object):
 
 class VirtualAccount(object):
   def __init__(
-      self, cash=0, asset=None, **kwargs):
+      self, cash=0, assets=None, **kwargs):
     self._cash = cash
     self._assets = assets or {}
     self._kwargs = kwargs  
+
+  def __str__(self):
+    tmpl = (
+        'Account summary:\n'
+        ' - Net: %s\n'
+        ' - Cash: %s\n'
+        ' - Assets: \n%s\n'
+        ' - Others: %s')
+    return tmpl % (
+        self.get_net_value(),
+        self._cash,
+        '\n'.join(str(asset) for asset in self._assets.values()),
+        self._kwargs)
 
   @property
   def cash(self):

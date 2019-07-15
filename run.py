@@ -23,13 +23,13 @@ def main():
       symbol=config['strategy']['symbol'],
       amplifier=config['strategy']['scale'],
       allpw_float_position=config['strategy'].get('allow_float_position'))
-  hst = {'daily_adjusted': av_client.load_daily_adjusted()}
+  hst = {'daily_adjusted': av_client.load_daily_adjusted(symbol=config['strategy']['symbol'])}
   sim = simulator.DailyStrategySimulator(
       account=acc, strategy=stg, history=hst,
       start=config['date']['start'], end=config['date']['end'])
 
   sim.simulate()
-  print(sim.account)
+  print(sim)
 
 
 if __name__ == '__main__':

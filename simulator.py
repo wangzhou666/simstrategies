@@ -14,6 +14,15 @@ class DailyStrategySimulator(object):
         date_pattern.match(d) for d in self._date_range)
     assert start <= end
 
+  def __str__(self):
+    tmpl = (
+        '---------------------\n'
+        'From %s To %s\n'
+        '%s\n'
+        '%s')
+    sd, ed = self._date_range
+    return tmpl % (sd, ed, self._acc, self._stg)
+
   @property
   def account(self):
     return self._acc
@@ -30,7 +39,7 @@ class DailyStrategySimulator(object):
 
     symbol = self._stg.symbol
     for day in exp_dates:
-      self._acc.update_asset_quote(
-          symbol, daily_adj_hst[day]['5. adjusted close'])
+      quote = float(daily_adj_hst[day]['5. adjusted close'])
+      self._acc.update_asset_quote(symbol, quote)
       self._stg.apply(self._acc)
 

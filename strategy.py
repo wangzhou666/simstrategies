@@ -10,6 +10,13 @@ class ScaledETFStrategy(Strategy):
     self._amp = amplifier
     self._kwargs = kwargs
 
+  def __str__(self):
+    tmpl = (
+        'Scaled ETF strategy:\n'
+        ' - Tracking symbol: %s\n'
+        ' - Amplifier: %s')
+    return tmpl % (self._sym, self._amp)
+
   @property
   def symbol(self):
     return self._sym
