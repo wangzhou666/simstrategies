@@ -7,13 +7,17 @@ import simulator
 import strategy
 
 def main():
-  #TODO: support batch run experiments.
   #TODO: support customized strategies
   parser = ArgumentParser(description='Run the simulator.')
-  parser.add_argument('--config_file', '-c', dest='config')
+  parser.add_argument('--config', '-c', dest='configs',
+                      action='append', default=[])
   args = parser.parse_args()
 
-  with open(args.config, 'r') as cf:
+  for filename in args.configs:
+    run_with_config(filename)
+
+def run_with_config(config_filename):
+  with open(config_filename, 'r') as cf:
     config = json.load(cf)
 
   av_client = quoteapi.AlphaVantageClient(
@@ -23,7 +27,7 @@ def main():
   stg = strategy.ScaledETFStrategy(
       symbol=config['strategy']['symbol'],
       amplifier=config['strategy']['scale'],
-      allpw_float_position=config['strategy'].get('allow_float_position'))
+      allow_float_position=config['strategy'].get('allow_float_position'))
   hst = {'daily_adjusted': av_client.load_daily_adjusted(symbol=config['strategy']['symbol'])}
   sim = simulator.DailyStrategySimulator(
       account=acc, strategy=stg, history=hst,
