@@ -1,14 +1,23 @@
 #!/usr/bin/env python3
+import logging
+import yaml
+
 from argparse import ArgumentParser
+
 import account
 import quoteapi
 import simulator
 import strategy
-import yaml
+
 
 _STRATEGIES = {
     'scaledetf': strategy.ScaledETFStrategy,
 }
+
+logging.basicConfig(
+    format='%(asctime)s-%(levelname)s:\n%(message)s',
+    level=logging.INFO)
+
 
 def main():
   parser = ArgumentParser(description='Run the simulator.')
@@ -43,7 +52,7 @@ def run_with_config(config_filename):
       end=config['history']['end'])
 
   sim.simulate()
-  print(sim)
+  logging.info('Finished simulation:\n%s', sim)
 
 
 if __name__ == '__main__':
