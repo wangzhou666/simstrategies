@@ -7,12 +7,8 @@ class DailyStrategySimulator(object):
     self._acc = account
     self._stg = strategy
     self._hst = history
-    self._date_range = (start, end)
-
-    date_pattern = re.compile(r'\d{4}-\d{2}-\d{2}')
-    assert all(
-        date_pattern.match(d) for d in self._date_range)
     assert start <= end
+    self._date_range = str(start), str(end)
 
   def __str__(self):
     tmpl = (

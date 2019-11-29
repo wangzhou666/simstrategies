@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 from argparse import ArgumentParser
 import account
-import json
 import quoteapi
 import simulator
 import strategy
+import yaml
 
 _STRATEGIES = {
     'scaledetf': strategy.ScaledETFStrategy,
@@ -21,7 +21,7 @@ def main():
 
 def run_with_config(config_filename):
   with open(config_filename, 'r') as cf:
-    config = json.load(cf)
+    config = yaml.safe_load(cf)
 
   av_client = quoteapi.AlphaVantageClient(
       apikey=config['alphavantage_key'])
@@ -29,9 +29,9 @@ def run_with_config(config_filename):
       cash=config['account']['cash'])
   
   stg_name = config['strategy']['name']
-  stg_kwargs = config['strategy']['kwargs']
+  stg_opts = config['strategy']['options']
   stg_cls = _STRATEGIES[stg_name]
-  stg = stg_cls(**stg_kwargs)
+  stg = stg_cls(**stg_opts)
 
   hst = {
       'daily_adjusted': av_client.load_daily_adjusted(
