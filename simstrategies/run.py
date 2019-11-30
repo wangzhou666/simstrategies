@@ -4,10 +4,10 @@ import yaml
 
 from argparse import ArgumentParser
 
-import account
-import quoteapi
-import simulator
-import strategy
+from simstrategies import account
+from simstrategies import quoteapi
+from simstrategies import simulator
+from simstrategies import strategy
 
 
 _STRATEGIES = {

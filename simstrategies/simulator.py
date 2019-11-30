@@ -1,5 +1,4 @@
 import bisect
-import re
 
 class DailyStrategySimulator(object):
   def __init__(self, account, strategy, history,
